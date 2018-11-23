@@ -2,13 +2,16 @@ package main
 
 import (
     "fmt"
+    "net/http"
+
     "github.com/le-michael/lounge"
 )
 
+const (
+    port = ":3000"
+)
 
-func hello(t string) {
-    fmt.Println("HELLO")
-}
+
 
 func main() {
 
@@ -17,6 +20,10 @@ func main() {
         fmt.Println(args)
         fmt.Println("hello",args[0])
     })
-    
-    l.Execute("hello","michael")
+
+    http.HandleFunc("/ws", func(w  http.ResponseWriter, r *http.Request) {
+        l.HandleConnection(w, r)
+    })
+
+    http.ListenAndServe(port, nil)
 }
