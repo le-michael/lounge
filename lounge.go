@@ -1,13 +1,13 @@
 package lounge
 
 import (
-	"fmt"
-	"reflect"
+    "fmt"
+    "reflect"
     "net/http"
     "log"
+
     "github.com/gorilla/websocket"
 )
-
 
 /// Constants ///
 
@@ -19,8 +19,8 @@ var (
     }
 )
 
-
 /// Functions ///
+
 func isFunc(fn interface{}) bool {
 	return reflect.TypeOf(fn).Kind() == reflect.Func
 }
@@ -60,11 +60,14 @@ func (l *Lounge) Execute(key string, args ...interface{}) {
 	fn.(func(...interface{}))(args...)
 }
 
+//HandleConnection will generate a new client on connection.
 func (l *Lounge) HandleConnection(w http.ResponseWriter, r *http.Request) {
     conn, err := upgrader.Upgrade(w, r, nil)
     if err != nil {
         log.Println(err)
         return
     }
-    log.Println("Client Connected", conn)
+    client := NewClient(conn)
+    log.Println("Client Connected", client)
+    go client.Listen()
 }
