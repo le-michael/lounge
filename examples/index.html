@@ -7,13 +7,25 @@
     <title>demo</title>
 </head>
 <body>
-    
+    <button onClick="sendMessage();"> Send Message </button> 
 </body>
 </html>
 
 <script>
     if (window["WebSocket"]) {
         conn = new WebSocket("ws://localhost:3000/ws");
+        test = {task:"hello", data:"there"} 
+    
+    
+        conn.onmessage = function(evt) {
+            console.log(evt.data)
+        }
+    
+    }
+
+    function sendMessage() {
+        test = {task:"hello", data:"there"}
+        conn.send(JSON.stringify(test))
     }
 
 </script>
