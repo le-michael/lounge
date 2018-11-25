@@ -8,12 +8,14 @@ import (
 type jsonmap map[string]interface{}
 
 type Client struct {
+    UUID string
+    
     conn *websocket.Conn
     lounge *Lounge
 }
 
 func NewClient(conn *websocket.Conn, lounge *Lounge) *Client{
-    return &Client{conn, lounge}
+    return &Client{GenUUID(), conn, lounge}
 }
 
 func (c *Client) Listen() {
