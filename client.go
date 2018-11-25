@@ -2,7 +2,6 @@ package lounge
 
 import (
     "fmt"
-    "encoding/json"
     "github.com/gorilla/websocket"
 )
 
@@ -10,10 +9,11 @@ type jsonmap map[string]interface{}
 
 type Client struct {
     conn *websocket.Conn
+    lounge *Lounge
 }
 
-func NewClient(conn *websocket.Conn) *Client{
-    return &Client{conn}
+func NewClient(conn *websocket.Conn, lounge *Lounge) *Client{
+    return &Client{conn, lounge}
 }
 
 func (c *Client) Listen() {
@@ -24,9 +24,9 @@ func (c *Client) Listen() {
             break
         }
 
-        var mssg jsonmap
-        json.Unmarshal(req, &mssg)
+        mssg := JsonToMap(c, req)
         fmt.Println(mssg)
+        c.lounge.Execute(mssg["task"].(string), mssg)
     }
 }
 

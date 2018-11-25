@@ -14,7 +14,6 @@
 <script>
     if (window["WebSocket"]) {
         conn = new WebSocket("ws://localhost:3000/ws");
-        test = {task:"hello", data:"there"} 
     
     
         conn.onmessage = function(evt) {

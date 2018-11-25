@@ -52,12 +52,12 @@ func (l *Lounge) ListenFor(key string, fn interface{}) {
 }
 
 //Execute will run a specified function given a key word.
-func (l *Lounge) Execute(key string, args ...interface{}) {
+func (l *Lounge) Execute(key string, mssg JsonMap) {
 	fn, ok := l.boundedFuncs[key]
 	if !ok {
 		panic(fmt.Sprintf("no function bounded to key: %v", key))
 	}
-	fn.(func(...interface{}))(args...)
+	fn.(func(JsonMap))(mssg)
 }
 
 //HandleConnection will generate a new client on connection.
@@ -67,7 +67,9 @@ func (l *Lounge) HandleConnection(w http.ResponseWriter, r *http.Request) {
         log.Println(err)
         return
     }
-    client := NewClient(conn)
-    log.Println("Client Connected", client)
+    client := NewClient(conn, l)
+
+    log.Println("Client Connected", client) //Debug line
+
     go client.Listen()
 }
